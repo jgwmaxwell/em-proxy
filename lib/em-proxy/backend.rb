@@ -1,6 +1,6 @@
 module EventMachine
   module ProxyServer
-    class Backend < EventMachine::ProxyServer::Connection
+    class Backend < EventMachine::Connection
       attr_accessor :plexer, :name, :debug
 
       def initialize(debug = false)
