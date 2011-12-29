@@ -45,12 +45,16 @@ module EventMachine
       def server(name, opts)
         if opts[:socket]
           srv = EventMachine::connect_unix_domain(opts[:socket], EventMachine::ProxyServer::Backend, @debug) do |c|
+            c.name = name
+            c.plexer = self
+            c.proxy_incoming_to(self, 10240) if opts[:relay_server]
+          end
         else
           srv = EventMachine::connect(opts[:host], opts[:port], EventMachine::ProxyServer::Backend, @debug) do |c|
-        end
-          c.name = name
-          c.plexer = self
-          c.proxy_incoming_to(self, 10240) if opts[:relay_server]
+            c.name = name
+            c.plexer = self
+            c.proxy_incoming_to(self, 10240) if opts[:relay_server]
+          end
         end
         self.proxy_incoming_to(srv, 10240) if opts[:relay_client]
 
