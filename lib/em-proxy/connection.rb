@@ -43,7 +43,11 @@ module EventMachine
       # initialize connections to backend servers
       #
       def server(name, opts)
-        srv = EventMachine::connect(opts[:host], opts[:port], EventMachine::ProxyServer::Backend, @debug) do |c|
+        if opts[:socket]
+          srv = EventMachine::connect_unix_domain(opts[:socket], EventMachine::ProxyServer::Backend, @debug) do |c|
+        else
+          srv = EventMachine::connect(opts[:host], opts[:port], EventMachine::ProxyServer::Backend, @debug) do |c|
+        end
           c.name = name
           c.plexer = self
           c.proxy_incoming_to(self, 10240) if opts[:relay_server]
