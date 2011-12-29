@@ -44,7 +44,6 @@ module EventMachine
       #
       def server(name, opts)
         if opts[:socket]
-          puts opts[:socket]
           srv = EventMachine::connect_unix_domain(opts[:socket], EventMachine::ProxyServer::Backend, @debug) do |c|
             c.name = name
             c.plexer = self
